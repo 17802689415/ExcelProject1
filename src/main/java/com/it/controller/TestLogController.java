@@ -1,7 +1,10 @@
 package com.it.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.it.pojo.TestLog;
 import com.it.service.TestLogService;
+import com.it.util.PageCommon;
 import com.it.util.R;
 import com.it.util.StringUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +28,19 @@ public class TestLogController {
     @Autowired
     private TestLogService testLogService;
 
+    @PostMapping("/init")
+    @ResponseBody
+    public R<Page> page(PageCommon pageCommon){
+        //分页构造器
+        Page pageInfo = new Page(pageCommon.getPage(),pageCommon.getPageSize());
+
+        LambdaQueryWrapper<TestLog> queryWrapper =new LambdaQueryWrapper<>();
+        queryWrapper.orderByAsc(TestLog::getId);
+        testLogService.page(pageInfo,queryWrapper);
+        return R.success(pageInfo);
+    }
+
+
     @PostMapping("/test")
     @ResponseBody
     public R<String> test(@RequestBody TestLog testLog){
@@ -41,7 +57,7 @@ public class TestLogController {
 
     @PostMapping("/out")
     @ResponseBody
-    public R<String> out() throws IOException {
+    public R<String> out() {
         // 1.创建工作簿
         Workbook workbook = new XSSFWorkbook();
         // 2.创建表名
@@ -58,14 +74,14 @@ public class TestLogController {
         rowHead.createCell(7).setCellValue("患者漏电流I DC+ AC1");
         rowHead.createCell(8).setCellValue("患者漏电流I DC+ AC2");
         rowHead.createCell(9).setCellValue("患者漏电流I  DC+AC1");
-        rowHead.createCell(9).setCellValue("患者漏电流I  DC+AC2");
-        rowHead.createCell(9).setCellValue("患者漏电流Ⅲ");
-        rowHead.createCell(9).setCellValue("患者辅助电流 DC+AC1");
-        rowHead.createCell(9).setCellValue("患者辅助电流 DC+AC2");
-        rowHead.createCell(9).setCellValue("患者辅助电流 DC+AC1");
-        rowHead.createCell(9).setCellValue("患者辅助电流 DC+AC2");
-        rowHead.createCell(9).setCellValue("保护接地阻抗");
-        rowHead.createCell(9).setCellValue("输入功率");
+        rowHead.createCell(10).setCellValue("患者漏电流I  DC+AC2");
+        rowHead.createCell(11).setCellValue("患者漏电流Ⅲ");
+        rowHead.createCell(12).setCellValue("患者辅助电流 DC+AC1");
+        rowHead.createCell(13).setCellValue("患者辅助电流 DC+AC2");
+        rowHead.createCell(14).setCellValue("患者辅助电流 DC+AC1");
+        rowHead.createCell(15).setCellValue("患者辅助电流 DC+AC2");
+        rowHead.createCell(16).setCellValue("保护接地阻抗");
+        rowHead.createCell(17).setCellValue("输入功率");
 
         List<TestLog> list = testLogService.list();
 
@@ -93,13 +109,27 @@ public class TestLogController {
             row.createCell(j++).setCellValue(list.get(i).getInputPower());
         }
         //4.创建流用于输出
-        FileOutputStream fileOutputStream = new FileOutputStream("excel");
-        //5.输出
-        workbook.write(fileOutputStream);
-        //6.关闭
-        workbook.close();
+        int count = 1;
+        FileOutputStream fileOutputStream = null;
+        try {
+            fileOutputStream = new FileOutputStream("C:\\Work\\excel"+count+".xlsx");
+            count++;
+            //5.输出
+            workbook.write(fileOutputStream);
+            //6.关闭
+            workbook.close();
+            return R.success("ok");
+        } catch (FileNotFoundException e) {
 
-        return R.success("ok");
+            return R.error("error");
+        } catch (IOException e) {
+
+            return R.error("error");
+        }
+
+
+
+
     }
 
 }

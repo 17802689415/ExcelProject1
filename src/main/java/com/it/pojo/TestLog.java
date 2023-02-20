@@ -5,6 +5,16 @@ import lombok.Data;
 
 public class TestLog {
 
+    private int id;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     private String operator;
     private String sn;
     private String testName;

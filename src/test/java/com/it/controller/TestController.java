@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 @RunWith(SpringRunner.class)
@@ -64,14 +66,14 @@ public class TestController {
         rowHead.createCell(7).setCellValue("患者漏电流I DC+ AC1");
         rowHead.createCell(8).setCellValue("患者漏电流I DC+ AC2");
         rowHead.createCell(9).setCellValue("患者漏电流I  DC+AC1");
-        rowHead.createCell(9).setCellValue("患者漏电流I  DC+AC2");
-        rowHead.createCell(9).setCellValue("患者漏电流Ⅲ");
-        rowHead.createCell(9).setCellValue("患者辅助电流 DC+AC1");
-        rowHead.createCell(9).setCellValue("患者辅助电流 DC+AC2");
-        rowHead.createCell(9).setCellValue("患者辅助电流 DC+AC1");
-        rowHead.createCell(9).setCellValue("患者辅助电流 DC+AC2");
-        rowHead.createCell(9).setCellValue("保护接地阻抗");
-        rowHead.createCell(9).setCellValue("输入功率");
+        rowHead.createCell(10).setCellValue("患者漏电流I  DC+AC2");
+        rowHead.createCell(11).setCellValue("患者漏电流Ⅲ");
+        rowHead.createCell(12).setCellValue("患者辅助电流 DC+AC1");
+        rowHead.createCell(13).setCellValue("患者辅助电流 DC+AC2");
+        rowHead.createCell(14).setCellValue("患者辅助电流 DC+AC1");
+        rowHead.createCell(15).setCellValue("患者辅助电流 DC+AC2");
+        rowHead.createCell(16).setCellValue("保护接地阻抗");
+        rowHead.createCell(17).setCellValue("输入功率");
 
         List<TestLog> list = testLogService.list();
 
@@ -100,7 +102,11 @@ public class TestController {
         }
         //4.创建流用于输出
 
-        FileOutputStream fileOutputStream = new FileOutputStream("");
+//        Date date = new Date();
+//        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd :hh:mm:ss");
+        int count = 1;
+        FileOutputStream fileOutputStream = new FileOutputStream("C:\\Work\\excel"+count+".xlsx");
+        count++;
         //5.输出
         workbook.write(fileOutputStream);
         //6.关闭
